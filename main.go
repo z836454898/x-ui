@@ -119,30 +119,35 @@ func updateSetting(port int, username string, password string) {
 }
 
 func main() {
+	// 检查命令行参数的数量。如果参数少于2个，则调用runWebServer()函数来启动Web服务器，并返回以终止程序的进一步执行
 	if len(os.Args) < 2 {
 		runWebServer()
 		return
 	}
-
+	// 将命令行标志 -v 绑定到 showVersion 变量。如果在运行程序时使用了 -v 标志，showVersion 将被设置为 true。标志的默认值是 false，描述信息是 "show version"
 	var showVersion bool
 	flag.BoolVar(&showVersion, "v", false, "show version")
-
+	// 解析命令行参数。flag.Parse()函数解析命令行参数，并将它们保存到相应的变量中
 	runCmd := flag.NewFlagSet("run", flag.ExitOnError)
-
 	v2uiCmd := flag.NewFlagSet("v2-ui", flag.ExitOnError)
+	// 设置 db sql lite 配置文件路径
 	var dbPath string
 	v2uiCmd.StringVar(&dbPath, "db", "/etc/v2-ui/v2-ui.db", "set v2-ui db file path")
-
+	// 设置 setting 配置
 	settingCmd := flag.NewFlagSet("setting", flag.ExitOnError)
 	var port int
 	var username string
 	var password string
 	var reset bool
+	// 将命令行标志 -reset 绑定到 reset 变量。如果在运行程序时使用了 -reset 标志，reset 将被设置为 true。标志的默认值是 false，描述信息是 "reset all setting"
 	settingCmd.BoolVar(&reset, "reset", false, "reset all setting")
+	// 将命令行标志 -port 绑定到 port 变量。如果在运行程序时使用了 -port 标志，port 将被设置为指定的值。标志的默认值是 0，描述信息是 "set panel port"
 	settingCmd.IntVar(&port, "port", 0, "set panel port")
+	// 将命令行标志 -username 绑定到 username 变量。如果在运行程序时使用了 -username 标志，username 将被设置为指定的值。标志的默认值是 ""，描述信息是 "set login username"
 	settingCmd.StringVar(&username, "username", "", "set login username")
+	// 将命令行标志 -password 绑定到 password 变量。如果在运行程序时使用了 -password 标志，password 将被设置为指定的值。标志的默认值是 ""，描述信息是 "set login password"
 	settingCmd.StringVar(&password, "password", "", "set login password")
-
+	// 重写 flag.Usage 函数，添加命令行参数的描述信息
 	oldUsage := flag.Usage
 	flag.Usage = func() {
 		oldUsage()
